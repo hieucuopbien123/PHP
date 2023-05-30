@@ -1,0 +1,115 @@
+PHP
+
+
+
+# Basic
+Webserver nhận request file PHP từ client, nó sẽ execute code PHP và gửi trả kq. Script file PHP phải đặt trong server, với xampp thì là thư mục htdoc.
+Có thể nhúng trực tiếp vào code html như 1 tag bth
+
+Có thể dùng <% %> cho php nếu trong config file enable asp_tags
+Dùng <script language="PHP"></script> => nhiều lúc k được
+Dùng <? ?> nếu config file enable short_open_tag => nhiều lúc chạy lỗi
+Có thể dùng <?php rồi code php bth mà k có tag đóng
+config file của php là 1 file riêng, trong VSC có sẵn file config mà có thể thay đổi các thông số trong settings
+=> Luôn dùng <?php ?>
+
+-> Trong PHP có nhiều built-in function: phpinfo
+
+-> Tên biến luôn bắt đầu với $ và ký tự thứ 2 là _ or character
+Biến không gán giá trị mặc định là null, k thể in và tính toán sẽ tự bỏ qua, k sinh lỗi.
+Phép tính kết hợp string với số tương tự k báo lỗi và tự bỏ qua string
+
+-> Thao tác với string
+strtolower strtoupper strlen trim
+
+-> Thao tác vói array
+
+-> Class
+Abstract class
+Interface
+
+-> Introspection
+
+
+
+# Client server
+-> Tên biến trong server PHP phải trùng với tên trường name trong form từ client gửi request lên
+Để chạy PHP phải có config file mặc định để bảo mật. Trường REGISTER_GLOBALS là ON thì dùng mặc định nhận từ form như trên. Là OFF thì phải tự dùng các PP khác để nhận về form variables. Mặc định nó là off
+Có thể check trường này trong phpinfo();
+
+-> Trong PHP server, ta có thể tạo ra ở cùng file client or khác file client. 
+Mọi response từ PHP server chính là mọi thứ ở trong file chứa nó. Nếu response chứa code php (trong cặp <?php >), nó sẽ k chạy vì browser k hiểu. Browser sẽ chỉ chạy phần html css js.
+
+Cơ chế routing:
+PHP server xử lý mọi request gửi đến url là file chứa code php server đó.
+VD: url /Home.php nhận request GET hay POST thì trong file đó phải có code PHP server xử lý 2 loại request (thông qua $_GET và $_POST)
+
+Khi code PHP ở cùng file với client. Mà responseText của nó là mọi thứ trong file hiện tại, nên nó giống như 1 NodeJS server SSR gửi trả lại HTML, CSS, JS (Tức k là AJAX và bh chả ai dùng như v). Mọi request tới nó sẽ nhận lại HTML, CSS, JS.
+=> Do đó dùng PHP, người ta thường chia file và chính cấu trúc thư mục là routing trong PHP luôn. Và tách ra như v giống với server NodejS AJAX bth. responseText sẽ là thứ mà server echo ra vì trong file php tách riêng đó chỉ có <?php > chứ k có html css js gì cả
+
+-> AJAX XMLHttpRequest với PHP
+Có 2 loại response trả về là:
+responseText (page html hiện tại chứa php + các thú mà server in ra như echo)
+responseXML là data dạng XML data mà server setup data thủ công để trả về client
+
+--> Để dùng responseXML:
+Phía server: echo '<?xml version="1.0" encoding="ISO-8859-1"?>
+Phía client: 
+xmlDoc=xmlHttp.responseXML;
+document.getElementById("firstname").innerHTML=
+xmlDoc.getElementsByTagName("firstname")[0].childNodes[0].nodeValue;
+document.getElementById("lastname").innerHTML=
+xmlDoc.getElementsByTagName("lastname")[0].childNodes[0].nodeValue;
+=> Tức client lấy data từ XML bằng JS y hệt việc tách lấy từ HTML bth. Server cũng phải gửi lại bằng cách wrap các thẻ dạng XML đặt tên tương ứng
+
+--> Với request GET:
+Phải truyền params qua url. Sau đó gửi đi mà k có body:
+xhr.open('GET', 'search.php?query=' + query, true);
+xhr.send(null);
+=> server nhận được với $_GET("query");
+
+--> Với request POST: 
+Truyền data qua body trong hàm send:
+xhr.open('POST', 'search.php');
+xhr.send('query=' + query);
+=> server nhận được với $_POST("query");
+
+
+
+# Namespace
+Giúp 2 class trùng tên vẫn có thể import dùng bth
+
+
+
+# Connect DB
+PHP dùng được với SQL Server, Access, Oracle, Ingres. Mạnh nhất là MySQL.
+MariaDb là 1 bản fork community của MySQL, do đội dev gốc của MySQL làm. Nó là mã nguồn mở tách ra từ MySQL vì họ lo ngại MySQL bị Oracle Corporation mua lại. Nch là dùng nó y hệt MySQL thôi.
+
+Cài XAMPP có sẵn MySQL, vẫn có thể tự cài bản chuẩn và phải config quyền user và connect với XAMPP nữa mới được. XAMPP cung sẵn MySQL DB và MySQL Server để serve cái DB đó. 
+Để mở giao diện, phải chạy server và vào: localhost/phpmyadmin để tạo DB + query bằng UI => Ấn vào SQL để tạo query
+Để dùng commandline: mở cmd trong xampp/mysql/bin => mysql -u root => đăng nhập xong với quyền root. Vì mặc định password là rỗng
+=> có thể xem thông tin root của data trong file: phpmyadmin/config.inc.php sẽ thấy 
+$cfg['Servers'][$i]['host'] = 'localhost';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = '';
+
+CMD cung thêm vài command nhanh:
+show databases;
+exit;
+create database a;
+mysql -u<username> -p<password> databasename < filename.sql
+use databasename;
+show tables;
+desc tablename;
+SET PASSWORD = PASSWORD('new_pass'); => đổi password cho user hiện tại
+
+
+
+# Other
+-> Dừng
+Khi học 1 ngôn ngữ mới, chỉ cần xem qua các thứ basic, cú pháp cơ bản
+Ngôn ngữ đó có gì đặc biệt khác với ngôn ngữ khác và các tính năng mang tính đặc biệt
+Còn lại vừa học vừa làm, search gg cú pháp (đỡ hơn chat GPT quá thụ động)
+Code cần lưu chính là project sử dụng và chat gpt
+
+

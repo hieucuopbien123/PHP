@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form>
+    <input type="text" id="product_name" placeholder="Enter product name">
+    <div id="product_list"></div>
+  </form>
+  
+  <script>
+    // Tính năng search
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('product_name').addEventListener('keyup', function(){
+        var query = this.value;
+        if(query !== ''){
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'search.php?query=' + query, true);
+          xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+          xhr.onload = function(){
+            if(xhr.status === 200){
+              document.getElementById('product_list').style.display = 'block';
+              document.getElementById('product_list').innerHTML = xhr.responseText;
+            }
+          };
+          xhr.send(null);
+        } else {
+          console.log("Run here");
+          document.getElementById('product_list').style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
