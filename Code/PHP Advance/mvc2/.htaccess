@@ -1,0 +1,7 @@
+<!-- File htaccess sẽ chỉ cho apache server cần serve file như thế nào ở từng thư mục -->
+<!-- Mọi call sẽ redirect vào folder public -->
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteRule    ^$    public/    [L]
+    RewriteRule    (.*) public/$1    [L]
+</IfModule>

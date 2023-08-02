@@ -1,0 +1,58 @@
+<html>
+<head>
+  <title>Ex Lab02 GHT</title>
+</head>
+<body>
+  <p>Input your information:</p>
+
+  <!-- # Client server -->
+  <form id="testform" action="http://localhost:4000/Code/PHP Basic/First/servertest.php" method="post">
+    <label for="fname">First name:</label>
+    <input type="text" name="firstname"><br>
+
+    <label for="lastname">Last name:</label>
+    <input type="text" name="lastname"><br><br>
+
+    <label for="pass">Password</label>
+    <input type="password" name="pass"><br><br>
+
+    <p style="margin: 0;">Your gender:</p>
+    <input type="radio" name="gender" id="male" value="Male">
+    <label for="gender" for="male">Male</label><br>
+    <input type="radio" name="gender" id="female" value="Female">
+    <label for="gender" for="female">Female</label><br><br>
+
+    <textarea name="description" form="testform" placeholder="Enter some description about you"></textarea><br><br>
+
+    <label for="vehicles">How you go to school:</label>
+    <select name="vehicles" id="vehicles">
+      <option value="Walk">Walk</option>
+      <option value="Bike">Bike</option>
+      <option value="Plane">Plane</option>
+      <option value="Car">Car</option>
+    </select><br><br>
+
+    <p style="margin: 0;">What is your favorite animals</p>
+    <input type="checkbox" id="animals" name="animals1" value="Cat">
+    <label for="Cat">Cat</label><br>
+    <input type="checkbox" id="animals" name="animals2" value="Dog">
+    <label for="Dog">Dog</label><br>
+    <input type="checkbox" id="animals" name="animals3" value="Bird">
+    <label for="Bird">Bird</label><br>
+    <input type="checkbox" id="animals" name="animals4" value="Tiger">
+    <label for="Tiger">Tiger</label><br><br>
+
+    <label for="birthday">Birthday:</label>
+    <input type="date" id="birthday" name="birthday"><br><br>
+
+    <label for="favcolor">Select your favorite color:</label>
+    <input type="color" id="favcolor" name="favcolor" value="#ff0000"><br><br>
+
+    <input type="reset" value="Reset">
+    &nbsp;<input type="submit" value="Submit to server">
+  </form>
+  <!-- Cũng chỉ là gửi GET http://localhost:4000/servertest.php?email=<nội dung nhập> -->
+
+
+</body>
+</html>

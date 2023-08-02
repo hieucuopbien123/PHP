@@ -1,0 +1,37 @@
+-> PHP là 1 ngôn ngữ có đầy đủ OOP. Vai trò như NodeJS, có thể dùng cho server or dùng cả back cả front.
+
+
+-> Cài đặt:
+--> IDE chuyên dụng: Netbeans => cài rồi chạy được luôn như bth
+
+--> Cài trên VSC: https://www.youtube.com/watch?v=1KTD9vXCWME
+Phải cài XAMPP 
+Phải cài đủ extension trong VSC, bao gồm intelephense -> vào settings CTRL , -> Intelephense Files Associations -> Edit settings.json -> Thêm:
+"php.validate.enable": true,
+"php.validate.executablePath": "C:/xampp/php/php.exe",
+"php.suggest.basic": false,
+"phpserver.port": 4000,
+=> Path phải dùng đúng là đường dẫn tới php.exe của XAMPP
+Thêm biến môi trường System variables -> Mục Path -> Thêm vào đường tuyệt đối tới thư mục php. VD: C:\xampp\php
+
+Chuột phải -> Run code: chạy dự án trong terminal
+Chuột phải -> PHP Server: Serve Project => chạy chương trình trong server php
+Nếu cài extension code runner thì có thể chuột phải và run code để chạy ngay trong terminal. Nó sẽ exec code PHP thành html chứ k render cả html như bth
+
+Khi dùng netbeans, code php phải đặt trong thư mục xampp là htdoc. Dùng VSC thì để đâu cũng được
+Khi chạy code php, phải khởi động xampp chạy php server mới được. Nếu dùng với MySQL thì phải bật cả server MySQL
+
+Cài extension PHP server sẽ serve được project xem trong terminal, còn XAMPP giúp hiển thị trên browser ở 1 cổng cụ thể => dùng https k chạy, http mới chạy.
+
+-> XAMPP là 1 free opensource web server solution stack package phát triển bởi Apache Friends. Nó chứa Apache web server, MySQL, PHP, Perl, a FTP server and phpMyAdmin.
+XAMPP viết tắt cho Cross-Platform(X), Apache(A), MariaDB(M), PHP(P) and Perl(P). Cung môi trường phát triển các ứng dụng web. 
+XAMPP Control Panel cho phép ta start server apache, mysql, tomcat,.. Nói chung là cung các thể loại server mà ta vào quản lý bật tắt tùy ý
+
+XAMPP là phần mềm quản lý server. VD có thể chạy Apache server cho website or chạy MySQL server để làm database cho web. Nó quản lý 1 thư mục do ta xác định thg là C://xampp/htdoc => mọi thay đổi trong thư mục này là thay đổi code server nó quản lý.
+VD có thể đưa code PHP vào thư mục và mở nó ra thành frontend served bởi Apache
+
+Để code PHP với Netbeans chuẩn cần cài NetBean + XAMPP + JDK Java tương thích mà netbean yêu cầu
+
+Thực tế khi ta bật server Apache của XAMPP thì server đã được chạy rồi. Nhưng nó chả serve file nào cả mà chỉ là 1 server ở 1 cổng trống. Thực tế gõ localhost vào vẫn ra XAMPP file mặc định trong thư mục htdocs. Ta chỉ cần code php và nhét vào htdocs để yêu cầu server serve các file php đó của ta mà thôi.
+
+Có 1 cái tương tự là LAMPP

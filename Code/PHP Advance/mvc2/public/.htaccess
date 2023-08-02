@@ -1,0 +1,9 @@
+<!-- Check request path kp file or directory -->
+<!-- Mọi request đều tới path là index.php?url=PATHNAME -->
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+</IfModule>

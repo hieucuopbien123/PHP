@@ -1,0 +1,302 @@
+PHP
+
+
+
+# Basic
+Webserver nhận request file PHP từ client, nó sẽ execute code PHP và gửi trả kq. Script file PHP phải đặt trong server, với xampp thì là thư mục htdoc.
+Có thể nhúng trực tiếp vào code html như 1 tag bth
+
+Có thể dùng <% %> cho php nếu trong config file enable asp_tags
+Dùng <script language="PHP"></script> => nhiều lúc k được
+Dùng <? ?> nếu config file enable short_open_tag => nhiều lúc chạy lỗi
+Có thể dùng <?php rồi code php bth mà k có tag đóng
+config file của php là 1 file riêng, trong VSC có sẵn file config mà có thể thay đổi các thông số trong settings
+=> Luôn dùng <?php ?>
+
+-> Trong PHP có nhiều built-in function: phpinfo
+
+-> Tên biến luôn bắt đầu với $ và ký tự thứ 2 là _ or character
+Biến không gán giá trị mặc định là null, k thể in và tính toán sẽ tự bỏ qua, k sinh lỗi.
+Phép tính kết hợp string với số tương tự k báo lỗi và tự bỏ qua string
+
+-> Thao tác với string
+strtolower strtoupper strlen trim
+
+-> Thao tác vói array
+
+-> Class
+Abstract class
+Interface
+
+-> Introspection
+
+-> Dùng require_once giúp nhúng code PHP từ 1 file khác, nếu từng nhúng sẽ k làm lại. VD: require_once("./Test1.php")
+
+
+
+# Client server
+-> Tên biến trong server PHP phải trùng với tên trường name trong form từ client gửi request lên
+Để chạy PHP phải có config file mặc định để bảo mật. Trường REGISTER_GLOBALS là ON thì dùng mặc định nhận từ form như trên. Là OFF thì phải tự dùng các PP khác để nhận về form variables. Mặc định nó là off
+Có thể check trường này trong phpinfo();
+
+-> Trong PHP server, ta có thể tạo ra ở cùng file client or khác file client. 
+Mọi response từ PHP server chính là mọi thứ ở trong file chứa nó. Nếu response chứa code php (trong cặp <?php >), nó sẽ k chạy vì browser k hiểu. Browser sẽ chỉ chạy phần html css js.
+
+Cơ chế routing:
+PHP server xử lý mọi request gửi đến url là file chứa code php server đó.
+VD: url /Home.php nhận request GET hay POST thì trong file đó phải có code PHP server xử lý 2 loại request (thông qua $_GET và $_POST)
+
+Khi code PHP ở cùng file với client. Mà responseText của nó là mọi thứ trong file hiện tại, nên nó giống như 1 NodeJS server SSR gửi trả lại HTML, CSS, JS (Tức k là AJAX và bh chả ai dùng như v). Mọi request tới nó sẽ nhận lại HTML, CSS, JS.
+=> Do đó dùng PHP, người ta thường chia file và chính cấu trúc thư mục là routing trong PHP luôn. Và tách ra như v giống với server NodejS AJAX bth. responseText sẽ là thứ mà server echo ra vì trong file php tách riêng đó chỉ có <?php > chứ k có html css js gì cả
+
+-> AJAX XMLHttpRequest với PHP
+Có 2 loại response trả về là:
+responseText (page html hiện tại chứa php + các thú mà server in ra như echo)
+responseXML là data dạng XML data mà server setup data thủ công để trả về client
+
+--> Để dùng responseXML:
+Phía server: echo '<?xml version="1.0" encoding="ISO-8859-1"?>
+Phía client: 
+xmlDoc=xmlHttp.responseXML;
+document.getElementById("firstname").innerHTML=
+xmlDoc.getElementsByTagName("firstname")[0].childNodes[0].nodeValue;
+document.getElementById("lastname").innerHTML=
+xmlDoc.getElementsByTagName("lastname")[0].childNodes[0].nodeValue;
+=> Tức client lấy data từ XML bằng JS y hệt việc tách lấy từ HTML bth. Server cũng phải gửi lại bằng cách wrap các thẻ dạng XML đặt tên tương ứng
+
+--> Với request GET:
+Phải truyền params qua url. Sau đó gửi đi mà k có body:
+xhr.open('GET', 'search.php?query=' + query, true);
+xhr.send(null);
+=> server nhận được với $_GET("query");
+
+--> Với request POST: 
+Truyền data qua body trong hàm send:
+xhr.open('POST', 'search.php');
+xhr.send('query=' + query);
+=> server nhận được với $_POST("query");
+
+Hoặc:
+const body = JSON.stringify({
+  title: "Hello World",
+  userId: 900,
+});
+xhr.send(body);
+
+
+
+# Namespace
+Giúp 2 class trùng tên vẫn có thể import dùng bth
+
+
+
+# Connect DB
+PHP dùng được với SQL Server, Access, Oracle, Ingres. Mạnh nhất là MySQL.
+MariaDb là 1 bản fork community của MySQL, do đội dev gốc của MySQL làm. Nó là mã nguồn mở tách ra từ MySQL vì họ lo ngại MySQL bị Oracle Corporation mua lại. Nch là dùng nó y hệt MySQL thôi.
+
+Cài XAMPP có sẵn MySQL, vẫn có thể tự cài bản chuẩn và phải config quyền user và connect với XAMPP nữa mới được. XAMPP cung sẵn MySQL DB và MySQL Server để serve cái DB đó. 
+Để mở giao diện, phải chạy server và vào: localhost/phpmyadmin để tạo DB + query bằng UI => Ấn vào SQL để tạo query
+Để dùng commandline: mở cmd trong xampp/mysql/bin => mysql -u root => đăng nhập xong với quyền root. Vì mặc định password là rỗng
+=> có thể xem thông tin root của data trong file: phpmyadmin/config.inc.php sẽ thấy 
+$cfg['Servers'][$i]['host'] = 'localhost';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = '';
+
+CMD cung thêm vài command nhanh:
+show databases;
+exit;
+create database a;
+mysql -u<username> -p<password> databasename < filename.sql
+use databasename;
+show tables;
+desc tablename;
+SET PASSWORD = PASSWORD('new_pass'); => đổi password cho user hiện tại
+
+
+
+# MVC
+Model biểu diễn và tương tác database. View render data. Controller handle request dựa trên event của người dùng => Controller tương tác qua lại với model để xử lý request rồi trả kết quả ra view.
+
+PHP là ngôn ngữ fullstack dùng MVC sẽ như thế này:
+User gửi request tới Controller
+Controller chạy script xử lý gọi tới Model
+Model có 2 file: Model.php truy xuất database và trả kết quả cho View dưới dạng XML data; Từng loại model vd Book.php, User.php, Movie.php,.. chứa data thuần mà Model.php gọi vào để tạo instance data.
+View tổng hợp data XML cho vào thành output html và gửi response
+
+Có thể tự tạo MVC framework riêng or dùng framwork PHP có sẵn như: CakePHP, Symfony, Zend,..
+
+-> Tự tạo MVC Framework:
+Library ta tự tạo:
+1 class model giúp connect và gọi hàm của database
+1 class controller có biến model để gọi hàm tương tác database, có biến template để in ra màn hình khi bị xóa
+1 class template render ra màn hình: header - data - footer
+
+Luồng thực hiện 1 request:
+Chạy apache cho toàn bộ dự án mvc2
+Mọi request trong htaccess xử lý sẽ vào thư mục public
+Mọi request vào public đều chuyển hướng sang index.php?url=PATHNAME tức file index.php xử lý
+File index.php lấy url global rồi import 2 file config để setup biến môi trường và shared để import các class cũng như lấy cái url global ra để gọi hàm xử lý.
+Url global có dạng: /controller/action/queryString thì nó xác định controller nào gọi và action là gọi vào hàm nào để thực hiện là xong => đó là hàm callHook()
+Hàm callHook sau khi gọi hàm của controller thì kết thúc luôn sẽ xóa controller đó đi và đóng hàm. Nên nhớ khi controller bị xóa, nó gọi hàm của template render ra màn hình header - data - footer
+
+Tạo application sử dụng MVC framework tự tạo:
+Bây giờ ta tạo ra application có 3 folder sử dụng là model view controller. 
+model có Item kế thừa từ Model của framework tự tạo có thể query database
+controller có ItemController kế thừa từ Controller của framework, nó có các hàm action tương ứng như add, delete để gọi vào khi có request
+view chứa các file action như add.php, delete.php để in ra khi thực hiện xong
+
+VD: query vào mysite.com/ItemController/Add?name=hieu&id=1
+Framework sẽ tự gọi hàm add() của ItemController dùng biến kiểu Item để gọi tới database rồi lưu kết quả cần trả ra vào biến global, sau khi kết thúc controller bị xóa thì template sẽ render ra màn hình
+Framework sẽ tự gọi hàm add() của ItemController dùng biến kiểu Item để gọi tới database rồi lưu kết quả cần trả ra vào biến global x chẳng hạn. Sau khi kết thúc controller bị xóa thì template sẽ render ra header.php add.php footer.php và add.php có thể in ra màn hình biến global x là kết quả trả về của request 
+
+=> Có thể áp dụng mô hình MVC chuẩn này vào nhiều ứng dụng khác 
+
+
+
+# XML
+eXtensible Markup Language phát triển bởi W3C (tổ chức World Wide Web Consortium chuyên phát triển tiêu chuẩn web) dựa trên SGML(Standard Generalized Markup Language). SGML cũng là meta language chuẩn ISO nhưng cú pháp phức tạp.
+Thực tế HTML cũng là markup lang dựa trên SGML. XML chỉ biểu diễn data chứ k lo hiển thị data như HTML, khả năng mở rộng cao hơn vì ta customize tag tùy ý.
+
+XHTML là extensible html cũng có thể dùng để xây dựng trang web. Nó giống HTML nhưng cú pháp chặt chẽ hơn. Trên <!DOCTYPE thường nói rõ dùng XML, XHTML, HTML và phiên bản cụ thể nhưng làm web ta cứ dùng HTML bừa k cần qt
+XHTML có nhiều quy tắc hơn như: tag phải luôn lowercase, buộc có close tag k để cho text lẻ loi, luôn phải đóng thẻ đơn bằng /> chứ k được dùng >, attribute luôn gán bằng 1 value
+
+-> XML prolog luôn phải có, VD: <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+version kp là docs mà là version của xml, tương tự html có version từ 1 đến 5, xml cũng có version, thg để là 1
+standalone xđ XML document có phụ thuộc vào external resources khác như DTD (document type definition) or entity definitions không
+
+Xác định location của DTD nếu có:
+– <!DOCTYPE root SYSTEM [URL]> => root xđ root element của document, SYSTEM dùng cho private DTD
+– <!DOCTYPE root PUBLIC [FPI-identifier] [URL]> => dùng cho public DTD
+
+VD: <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE authors SYSTEM “http://example.org/authors.dtd”>
+<authors> 
+  <name>
+    <firstname>Larry</firstname>
+    <lastname>Brown</lastname>
+  </name>
+  <name>
+    <firstname>Marty</firstname>
+  </name>
+</authors>
+=> Tức root element là tag authors xđ bên dưới. Thông tin đó còn được ref tới url bên ngoài
+
+VD cách khác:
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE authors [
+  <!ELEMENT authors(name)*>
+  <!ELEMENT name(firstname, lastname)>
+  <!ELEMENT firstname(#PCDATA)>
+  <!ELEMENT lastname(#PCDATA)>
+]>
+<authors>
+  <name>
+    <firstname>James</firstname>
+    <lastname>Gosling</lastname>
+  </name>
+</authors>
+=> Tức bản standalone k phụ thuộc vào nguồn bên nào bên ngoài, dtd ở ngay bên dưới luôn
+
+Public DTD có FPI-identifier gồm 4 phần: 
+1) Connection of DTD to a formal standard:
+- if defining yourself
++ nonstandards body has approved the DTD
+ISO if approved by formal standards committee
+2) Group responsible for the DTD
+3) Description and type of document
+4) Language used in the DTD
+VD: <!DOCTYPE Book PUBLIC "-//W3C//DTD XHMTL 1.0 Transitional//EN" "http://www.w3.org/TR?xhtml1/DTD/xhtml1-transitional.dtd">
+
+=> ref tới "Slides / XML_XHTML.pdf" chứa đầy đủ mọi thứ về XML
+
+
+
+# Web Security
+Origin = scheme(http,https) + host name + port => k tính phần url sau
+Tức chỉ là same-origin khi trùng đúng 3 trường này. Đôi khi trường port k cần nếu ngầm hiểu là đúng port
+
+VD1 trang webX nhúng iframe trang webY vào và lấy bằng iframe.contentDocument.getElementById("password").innerText thì toang. Thực tế browser cũng tự cản cross-origin, thì nếu iframe và host page k cùng origin sẽ k cho đọc thẻ trong embedded page từ host page. Nhưng nếu user dùng browser phiên bản cũ thì có thể toang
+
+VD2 webX nhúng iframe webY và chỉ nhúng thôi chứ k có ý xấu gì cả thì vẫn ok, tùy ý origin owner quyết định set X-Frame-Options trong HTTP header là deny or sameorigin để cấm
+
+VD3 set src cho thẻ image là url ảnh thì k cần CORS và dùng thoải mái. Nhưng nếu access binary của image bằng JS như getImageData, toBlob, toDataURL thì cần quyền bởi CORS
+
+-> Bản chất CORS luôn có sẵn trong browser của user để tự động cản cross-origin để bảo vệ chính người dùng đó luôn. Còn nếu người dùng sử dụng browser cũ hoặc request k thông qua browser thì vẫn bỏ qua cross-origin được. Nhưng điều này khá bất tiện nên CORS bh vẫn cho cross-origin và việc request được cái gì thì CORS ở phía server phải tự chặn và tự implement allow.
+
+Cơ chế: Khi browser tạo cross origin request, nó sẽ add 1 Origin header vào origin hiện tại -> Phía server nhận request thấy header sẽ thêm Access-Control-Allow-Origin header vào response -> Browser nhận header đó thấy hợp lệ thì cho phép client nhận và show ra.
+
+-> Các kiểu tấn công:
+1) Click jacking: nhúng trang của ta vào webX, ấn vào webX thực chất là thực hiện action trên trang của ta. 
+Có thể cản nhúng or thêm CSP whitelist. VD:
+Content-Security-Policy: frame-ancestors "self"; => chỉ được gọi tới trang của từ chính ta
+Content-Security-Policy: frame-ancestors test.com; => chỉ được gọi tới trang của từ test.com
+
+2) XSS có 3 kiểu
+Stored XSS Attack: hacker lưu thẳng code hack vào server của website đó luôn
+VD 1 ứng dụng forum cho phép user post comment. 1 hacker post lên comment chứa thẳng thẻ script vào thực hiện 1 cái gì đó. Khi user khác vào get comment và browser parse nó vào html tag sẽ thực hiện đoạn script của hacker trên máy client và lấy cắp thông tin
+
+Reflected XSS attack: 
+Click 1 url or submit form perform request tới 1 server thực hiện actions k mong muốn. Nó kiểu kết hợp của clickjacking và XSS. 
+VD ấn vào link thực chất là thực hiện request GET tới https://example.com/search?q=<script>alert('XSS');</script> rồi nhận về response thực hiện code XSS kia.
+=> Cài này vớ vẩn, chống cross-origin là chông được cả cái này
+
+DOM-based XSS attack:
+Đây là kiểu bth nhất là chèn code vào input nào đó để khi parse DOM thì chính máy hacker perform action nào đó. Nó hoàn toàn ở phía client klq j tói server
+
+--> Để chống XSS: 
+Cần lọc input và output là chứa data text chứ k chứa tag hay code 
+Dùng header response Content-Type và X-Content-Type-Options để xđ output k được có code HTML or JS
+Dùng Content Security Policy cản cross-origin cx giúp cản XSS
+
+---> Frontend:
+Biến các ký tự đầu vào như < > thành HTML entity là &lt; &gt; để tránh việc input đầu vào là mã HTML thực tế. React có các thư viện như html-entities, dompurify giúp sanitize input của user.
+
+Dùng textContent hay createTextNode thay cho innerHTML để dùng dữ liệu DOM. K sử dụng hàm eval();
+Trong React chỉ cần dùng jsx cho dữ liệu thay cho innerHTMl là được. Vd:
+const userInput = '<script>alert("XSS attack!");</script>';
+<div>{userInput}</div>
+
+Cắm thẻ meta bảo vệ header, cũng phải làm nó ở backend:
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+
+---> Backend:
+Thiết lập các header: Content-Security-Policy, X-XSS-Protection, X-Content-Type-Options chống XSS. Vd express có thể dùng helmet
+Lọc data đầu vào các ký tự đặc biệt. Với express có thể dùng package express-validator.
+
+-> Ta thường set header cho request từ frontend nhưng ít khi set header từ backend trả về:
+- Set header ở frontend để điều chỉnh request nhiều lúc là bắt buộc. VD set "Authorization" và "Content-Type" để server xử lý
+- Set header ở backend để tùy chỉnh response. VD: res.set('Content-Type', 'application/json'); res.set('X-Custom-Header', 'value'); Các header này tùy TH frontend có thể lấy thêm các thông tin custom header,...
+
+
+
+# Dùng CakePHP
+Framework có sẵn MVC pattern chuẩn. 
+=> ref tới "Slides / CakePHP"
+
+Cài đặt: 
+Cài php trước: cmd -> php --version
+Cài composer: cài composer_setup.exe trên trang chủ -> vào cmd -> composer được luôn
+
+Composer yêu cầu php trong máy phải enable extension intl: 
+Gõ php --ini vào cmd -> theo đường dẫn thư mục hiện ra, mở file php.ini ra -> uncomment dòng ;extension=intl bằng cách bỏ dấu ; đi -> restart server
+
+Tạo 1 projects cakephp: Éo hiểu sao chạy bằng cmd với git bash lỗi, phải dùng powershell
+Tạo thư mục xampp/htdocs/cakephp
+powershell tới thư mục đó: composer create-project --prefer-dist cakephp/app my_app_name
+cd my_app_name/bin
+Vào environment variables của máy -> Advanced -> System variables -> thêm thư mục bin kia vào (nếu ta cd tới nó rồi mà vẫn k gọi được lệnh cake) => nếu TH này xảy ra, mỗi lần muốn chạy lệnh cake của từng dự án cakephp sẽ phải xóa đi thêm lại thư mục bin của từng dự án
+Vào projects, đổi file config/app_local.php: mục Datasources/default là 1 mảng thì chỉnh sửa username và password và database tới mysql đang chạy ở local. VD xampp mysql thì chạy với username là 'root', password là rỗng ''
+
+Chạy lệnh: cake bake all <tên table> => sẽ tự sinh code để CRUD cho database bằng php cho dự án. Check trong thư mục src/Controller -> Sau đó vào url: http://localhost/cakephp/my_app_name/<tên database> sẽ thấy CRUD cho db bằng giao diện khi ở đây dùng kết hợp với xampp.
+Có thể chạy k thông qua xampp thì dùng: cake server => sẽ serve thư mục dự án cakephp đó.
+
+
+
+# Other
+-> Dừng
+Khi học 1 ngôn ngữ mới, chỉ cần xem qua các thứ basic, cú pháp cơ bản
+Ngôn ngữ đó có gì đặc biệt khác với ngôn ngữ khác và các tính năng mang tính đặc biệt
+Còn lại vừa học vừa làm, search gg cú pháp (đỡ hơn chat GPT quá thụ động)
+Code cần lưu chính là project sử dụng và chat gpt
+
+
