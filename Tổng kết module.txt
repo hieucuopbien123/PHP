@@ -242,6 +242,9 @@ VD ấn vào link thực chất là thực hiện request GET tới https://exam
 
 DOM-based XSS attack:
 Đây là kiểu bth nhất là chèn code vào input nào đó để khi parse DOM thì chính máy hacker perform action nào đó. Nó hoàn toàn ở phía client klq j tói server
+Tại sao nó k cần lưu ở máy chủ mà user browser vẫn thực hiện nó? VD trang web hiển thị tên của người dùng url input: https://example.com/page?name=<script>Mã độc</script> => browser k kiểm tra input mà hiển thị tên lấy từ url luôn sẽ thực thi script. Do k lưu ở máy chủ nên nó chỉ có thể lấy các thông tin về trang web đó ở browser như session cookie,..
+Làm sao hacker tạo ra url như v, nhưng lại thực thi ở phía người dùng? VD hacker tạo ra url đó và gửi người dùng qua mail. Người dùng ấn vào sẽ thực thi script nếu trang web đó k check input từ url kỹ
+Nó khác reflected xss ở chỗ chỉ thực thi ở trình duyệt người dùng, còn reflected là thực thi trên trình duyệt chứa mã độc, nó gửi tới server, rồi server gửi lại trình duyệt mã độc để nó làm gì khác đều được. DOM based là do nó thay đổi DOM còn reflected là nạn nhân click vào liên kết độc hại.
 
 --> Để chống XSS: 
 Cần lọc input và output là chứa data text chứ k chứa tag hay code 
@@ -252,7 +255,7 @@ Dùng Content Security Policy cản cross-origin cx giúp cản XSS
 Biến các ký tự đầu vào như < > thành HTML entity là &lt; &gt; để tránh việc input đầu vào là mã HTML thực tế. React có các thư viện như html-entities, dompurify giúp sanitize input của user.
 
 Dùng textContent hay createTextNode thay cho innerHTML để dùng dữ liệu DOM. K sử dụng hàm eval();
-Trong React chỉ cần dùng jsx cho dữ liệu thay cho innerHTMl là được. Vd:
+Trong React chỉ cần dùng jsx cho dữ liệu thay cho innerHTMl cx chống được. Vd:
 const userInput = '<script>alert("XSS attack!");</script>';
 <div>{userInput}</div>
 
